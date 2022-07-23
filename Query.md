@@ -1,3 +1,4 @@
+```
 _sourceCategory=windows/events
 
 | formatDate(toLong(_messagetime), "yyyy-MM-dd'T'HH:mm:ss.SSS") as ts
@@ -53,3 +54,4 @@ _sourceCategory=windows/events
 
 | parse regex field=qualifiers "score:\s(?<score>-?\d+)" multi
 | values(qualifiers) as qualifiers,sum(score) as score,values(eventid) as event_codes,values(CommandLine) as CommandLines,values(ImageLoaded) as ImagesLoaded, values(ParentImage) as ParentImages by _timeslice 
+```
