@@ -1,0 +1,252 @@
+<Sysmon schemaversion="4.81">
+<!-- SCPTAG: OfficeSus -->
+  <!-- Hashing algorithms that can be used are md5,sha1,sha256,imphash or * for all,
+  more than once can be specified separated by using comas -->
+  <HashAlgorithms>md5</HashAlgorithms>
+  <!-- Checking for signature revocation for drivers. -->
+  <CheckRevocation/>
+  <EventFiltering>
+    <RuleGroup name="Process Creation-Include" groupRelation="or">
+        <ProcessCreate onmatch="include">
+			<Image condition="is">C:\Windows\system32\wbem\wmiprvse.exe</Image>
+			<ParentImage condition="is">C:\Windows\system32\wbem\wmiprvse.exe</ParentImage>
+			<Image name="" condition="end with">WINWORD.EXE</Image>
+			<ParentImage name="" condition="end with">WINWORD.EXE</ParentImage>
+			<Image name="" condition="end with">EXCEL.EXE</Image>
+			<ParentImage name="" condition="end with">EXCEL.EXE</ParentImage>
+        </ProcessCreate>
+    </RuleGroup>
+    <RuleGroup name="Process Creation-Exclude" groupRelation="or">
+        <ProcessCreate onmatch="exclude">
+        </ProcessCreate>
+    </RuleGroup>
+    <RuleGroup name="Network Connect-Include" groupRelation="or">
+        <NetworkConnect onmatch="include">
+        </NetworkConnect>
+    </RuleGroup>
+    <RuleGroup name="Network Connect-Exclude" groupRelation="or">
+      <NetworkConnect onmatch="exclude">
+      </NetworkConnect>
+    </RuleGroup>
+    <RuleGroup name="" groupRelation="or">
+      <ImageLoad onmatch="include">
+		<ImageLoaded condition="contains">VBE7INTL.DLL</ImageLoaded>
+		<ImageLoaded condition="contains">VBEUI.DLL</ImageLoaded>
+		<Rule groupRelation="and">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\PeerDist.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\hlink.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\ieframe.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\DiagnosticDataSettings.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\SysWOW64\combase.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\SysWOW64\coml2.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\SysWOW64\comsvcs.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\wbem\wbemprox.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\wbemcomn.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\wbem\wbemsvc.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="is">C:\Windows\System32\wbem\wbemdisp.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="end with">clr.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="begin with">C:\Windows\assembly</ImageLoaded>
+		</Rule>	
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="end with">clrjit.dll</ImageLoaded>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<ImageLoaded condition="end with">Microsoft.Office.Tools.ni.dll</ImageLoaded>
+		</Rule>				
+      </ImageLoad>
+	 </RuleGroup>
+	 <RuleGroup name="Image Load-Exclude" groupRelation="or">
+      <ImageLoad onmatch="exclude">
+      </ImageLoad>
+    </RuleGroup>
+    <RuleGroup name="CreateRemoteThread-Include" groupRelation="or">
+      <CreateRemoteThread onmatch="include">
+      </CreateRemoteThread>
+	 </RuleGroup>
+	 <RuleGroup name="CreateRemoteThread-Exclude" groupRelation="or">
+      <CreateRemoteThread onmatch="exclude">
+      </CreateRemoteThread>
+    </RuleGroup>
+    <RuleGroup groupRelation="or">
+		<ProcessAccess onmatch="include">
+			<TargetImage condition="contains">notepad.exe</TargetImage>
+			<Rule groupRelation="and" name="MOTW Removed From File">	
+				<SourceImage condition="is">C:\Windows\system32\ctfmon.exe</SourceImage>
+				<TargetImage condition="is">C:\Windows\explorer.exe</TargetImage>
+				<CallTrace condition="contains">UNKNOWN</CallTrace>
+				<GrantedAccess condition="is">0x1000</GrantedAccess>
+			</Rule>
+			<Rule groupRelation="and">
+				<SourceImage condition="contains">Microsoft Office</SourceImage>
+				<CallTrace condition="contains" name="function_name=InternalCreateProcessWCommand">C:\Program Files\Microsoft Office\root\Office16\AppVIsvSubsystems64.dll+d9437</CallTrace>
+			</Rule>
+			<Rule groupRelation="and">
+				<SourceImage condition="contains">Microsoft Office</SourceImage>
+				<CallTrace condition="contains" name="function_name=CallCreateProcess">C:\Windows\SYSTEM32\windows.storage.dll+1a166d</CallTrace>
+			</Rule>
+			
+			<Rule groupRelation="and">	
+				<SourceImage condition="contains">Microsoft Office</SourceImage>
+				<GrantedAccess condition="is">0x1FFFFF</GrantedAccess>
+			</Rule>
+			<CallTrace condition="contains" name="technique_id=T1047,technique_name=Windows Management Instrumentation,function_name=ProviderExecMethod">C:\Windows\SYSTEM32\framedynos.dll+22306</CallTrace>
+			<CallTrace condition="contains" name="technique_id=T1047,technique_name=Windows Management Instrumentation,function_name=CWbemProviderGlueExecMethodAsync">C:\Windows\SYSTEM32\framedynos.dll+239ae</CallTrace>
+			<Rule groupRelation="and">
+				<SourceImage condition="contains">Microsoft Office</SourceImage>
+				<CallTrace condition="contains" name="function_name=InternalCreateProcessWCommand">C:\Program Files\Microsoft Office\root\Office16\AppVIsvSubsystems64.dll+d9437</CallTrace>
+			</Rule>
+			<Rule groupRelation="and">
+				<SourceImage condition="contains">Microsoft Office</SourceImage>
+				<CallTrace condition="contains" name="function_name=CallCreateProcess">C:\Windows\SYSTEM32\windows.storage.dll+1a166d</CallTrace>
+			</Rule>
+		 </ProcessAccess>
+	 </RuleGroup>
+	 <RuleGroup name="ProcessAccess-Exclude" groupRelation="or">
+		<ProcessAccess onmatch="exclude">
+			<TargetImage condition="is">C:\Windows\system32\lsass.exe</TargetImage>
+			<GrantedAccess condition="is">0x1000</GrantedAccess>
+			<SourceImage condition="is">C:\Windows\system32\svchost.exe</SourceImage>
+      </ProcessAccess>
+    </RuleGroup>
+    <RuleGroup name="File Create - Include" groupRelation="or">
+      <FileCreate onmatch="include">
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<TargetFilename condition="contains">\AppData\Local\Temp\Deployment\</TargetFilename>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<TargetFilename condition="end with">.jse</TargetFilename>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<TargetFilename condition="end with">.vbs</TargetFilename>
+		</Rule>
+		<Rule groupRelation="and" name="">
+			<Image condition="contains">root\Office16\</Image>
+			<TargetFilename condition="contains">\AppData\Local\Temp\Deployment\</TargetFilename>
+		</Rule>
+      </FileCreate>
+    </RuleGroup>
+	    <RuleGroup groupRelation="or">
+      <FileCreateStreamHash onmatch="include">
+        <TargetFilename condition="contains">Temp\7z</TargetFilename>
+        <TargetFilename condition="end with">.bat</TargetFilename>
+        <TargetFilename condition="end with">.cmd</TargetFilename>
+        <TargetFilename condition="end with">Temp\debug.bin</TargetFilename>
+        <TargetFilename condition="end with">.dll</TargetFilename>
+        <TargetFilename condition="end with">.exe</TargetFilename>
+        <TargetFilename condition="end with">.hta</TargetFilename>
+        <Rule name="technique_id=T1089,technique_name=Drive-by Compromise" groupRelation="and">
+          <TargetFilename condition="end with">:Zone.Identifier</TargetFilename>
+          <Contents condition="contains any">blob:;about:internet</Contents>
+        </Rule>
+        <TargetFilename condition="end with">.lnk</TargetFilename>
+        <TargetFilename condition="contains">Content.Outlook</TargetFilename>
+        <TargetFilename name="technique_id=T1059.001,technique_name=PowerShell" condition="end with">.ps1</TargetFilename>
+        <TargetFilename name="technique_id=T1059.001,technique_name=PowerShell" condition="end with">.ps2</TargetFilename>
+        <TargetFilename condition="end with">.reg</TargetFilename>
+        <TargetFilename condition="contains">Downloads</TargetFilename>
+        <TargetFilename condition="contains">AppData</TargetFilename>
+        <TargetFilename condition="contains">Temp</TargetFilename>
+        <TargetFilename condition="contains">ProgramData</TargetFilename>
+        <TargetFilename condition="contains">Users</TargetFilename>
+        <TargetFilename condition="end with">.vb</TargetFilename>
+        <TargetFilename condition="end with">.vbe</TargetFilename>
+        <TargetFilename condition="end with">.vbs</TargetFilename>
+      </FileCreateStreamHash>
+    </RuleGroup>
+    <RuleGroup name="File Create - Exclude" groupRelation="or">
+      <FileCreate onmatch="exclude">
+      </FileCreate>
+    </RuleGroup>
+    <RuleGroup name="Process Terminate - Include" groupRelation="or">
+      <ProcessTerminate onmatch="include">
+      </ProcessTerminate>
+    </RuleGroup>
+    <RuleGroup name="Process Terminate - Exclude" groupRelation="or">
+      <ProcessTerminate onmatch="exclude">
+      </ProcessTerminate>
+    </RuleGroup>
+    <RuleGroup name="RegKey-Include" groupRelation="or">
+      <RegistryEvent onmatch="include">
+		<TargetObject condition="contains">TrustRecords</TargetObject>
+      </RegistryEvent>
+    </RuleGroup>
+    <RuleGroup name="RegKey-Exclude" groupRelation="or">
+      <RegistryEvent onmatch="exclude">
+      </RegistryEvent>
+    </RuleGroup>
+    <RuleGroup name="PipeEvent-Include" groupRelation="or">
+      <PipeEvent onmatch="include">
+      </PipeEvent>
+    </RuleGroup>
+    <RuleGroup name="PipeEvent-Exclude" groupRelation="or">
+      <PipeEvent onmatch="exclude">
+      </PipeEvent>
+    </RuleGroup>
+    <RuleGroup name="WMIEvent-Include" groupRelation="or">
+      <WmiEvent onmatch="include">
+      </WmiEvent>
+    </RuleGroup>
+    <RuleGroup name="WMIEvent-Exclude" groupRelation="or">
+      <WmiEvent onmatch="exclude">
+      </WmiEvent>
+    </RuleGroup>
+    <RuleGroup name="DNSEvent-Include" groupRelation="or">
+      <DnsQuery onmatch="include">
+      </DnsQuery>
+    </RuleGroup>
+    <RuleGroup name="DNSEvent-Exclude" groupRelation="or">
+      <DnsQuery onmatch="exclude">
+      </DnsQuery>
+    </RuleGroup>
+    <RuleGroup name="ProcessTampering-Include" groupRelation="or">
+      <ProcessTampering onmatch="include">
+      </ProcessTampering>
+    </RuleGroup>
+    <RuleGroup name="ProcessTampering-Exclude" groupRelation="or">
+      <ProcessTampering onmatch="exclude">
+      </ProcessTampering>
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>
