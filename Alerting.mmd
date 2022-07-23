@@ -1,0 +1,17 @@
+flowchart TD
+    Macro --> C{Location}
+    Macro --> G{Network}
+    Macro --> H{ImageLoad}
+    Macro --> I{CallTrace}
+    C -->|FileShare| D[Score-]
+    C -->|Email| E[Score+]
+    C -->|EncZip| F[Score++]
+    G -->|Trusted| DD[Score-]
+    G -->|Untrusted| EE[Score+]
+    G -->|Beaconing| FF[Score++]
+    H -->|VBA| DDD[Score-]
+    H -->|COM| EEE[Score+]
+    H -->|WMI| FFF[Score++]
+    I -->|Baseline| DDDD[Score-]
+    I -->|SusTargetProc| EEEE[Score+]
+    I -->|SusGrantedAccess| FFFF[Score++]
