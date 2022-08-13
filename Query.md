@@ -1,3 +1,6 @@
+
+## Please note, query is for Sumo Logic CIP. Research purposes only, please test before putting into production.
+
 ```
 _sourceCategory=windows/events
 
